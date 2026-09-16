@@ -126,36 +126,36 @@
   <!-- Pop-up Pemberitahuan -->
   <div id="toast" class="toast">Ini adalah halaman awal</div>
 
-  <!-- Area Buku -->
+  <!-- Area Buku (Urutan HTML Di-reverse khusus untuk alur animasi Al-Qur'an) -->
   <div class="container">
     <div id="flipbook">
-      <!-- Cover Depan -->
-      <div class="page"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
-
-      <!-- Isi Halaman Al-Qur'an (1 - 20) -->
-      <div class="page"><img src="images/hal-01.webp" alt="Hal 1"></div>
-      <div class="page"><img src="images/hal-02.webp" alt="Hal 2"></div>
-      <div class="page"><img src="images/hal-03.webp" alt="Hal 3"></div>
-      <div class="page"><img src="images/hal-04.webp" alt="Hal 4"></div>
-      <div class="page"><img src="images/hal-05.webp" alt="Hal 5"></div>
-      <div class="page"><img src="images/hal-06.webp" alt="Hal 6"></div>
-      <div class="page"><img src="images/hal-07.webp" alt="Hal 7"></div>
-      <div class="page"><img src="images/hal-08.webp" alt="Hal 8"></div>
-      <div class="page"><img src="images/hal-09.webp" alt="Hal 9"></div>
-      <div class="page"><img src="images/hal-10.webp" alt="Hal 10"></div>
-      <div class="page"><img src="images/hal-11.webp" alt="Hal 11"></div>
-      <div class="page"><img src="images/hal-12.webp" alt="Hal 12"></div>
-      <div class="page"><img src="images/hal-13.webp" alt="Hal 13"></div>
-      <div class="page"><img src="images/hal-14.webp" alt="Hal 14"></div>
-      <div class="page"><img src="images/hal-15.webp" alt="Hal 15"></div>
-      <div class="page"><img src="images/hal-16.webp" alt="Hal 16"></div>
-      <div class="page"><img src="images/hal-17.webp" alt="Hal 17"></div>
-      <div class="page"><img src="images/hal-18.webp" alt="Hal 18"></div>
-      <div class="page"><img src="images/hal-19.webp" alt="Hal 19"></div>
-      <div class="page"><img src="images/hal-20.webp" alt="Hal 20"></div>
-
       <!-- Cover Belakang -->
-      <div class="page"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
+      <div class="page" data-page-name="Cover Belakang"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
+
+      <!-- Isi Halaman Al-Qur'an (20 - 1) -->
+      <div class="page" data-page-name="Hal 20"><img src="images/hal-20.webp" alt="Hal 20"></div>
+      <div class="page" data-page-name="Hal 19"><img src="images/hal-19.webp" alt="Hal 19"></div>
+      <div class="page" data-page-name="Hal 18"><img src="images/hal-18.webp" alt="Hal 18"></div>
+      <div class="page" data-page-name="Hal 17"><img src="images/hal-17.webp" alt="Hal 17"></div>
+      <div class="page" data-page-name="Hal 16"><img src="images/hal-16.webp" alt="Hal 16"></div>
+      <div class="page" data-page-name="Hal 15"><img src="images/hal-15.webp" alt="Hal 15"></div>
+      <div class="page" data-page-name="Hal 14"><img src="images/hal-14.webp" alt="Hal 14"></div>
+      <div class="page" data-page-name="Hal 13"><img src="images/hal-13.webp" alt="Hal 13"></div>
+      <div class="page" data-page-name="Hal 12"><img src="images/hal-12.webp" alt="Hal 12"></div>
+      <div class="page" data-page-name="Hal 11"><img src="images/hal-11.webp" alt="Hal 11"></div>
+      <div class="page" data-page-name="Hal 10"><img src="images/hal-10.webp" alt="Hal 10"></div>
+      <div class="page" data-page-name="Hal 09"><img src="images/hal-09.webp" alt="Hal 9"></div>
+      <div class="page" data-page-name="Hal 08"><img src="images/hal-08.webp" alt="Hal 8"></div>
+      <div class="page" data-page-name="Hal 07"><img src="images/hal-07.webp" alt="Hal 7"></div>
+      <div class="page" data-page-name="Hal 06"><img src="images/hal-06.webp" alt="Hal 6"></div>
+      <div class="page" data-page-name="Hal 05"><img src="images/hal-05.webp" alt="Hal 5"></div>
+      <div class="page" data-page-name="Hal 04"><img src="images/hal-04.webp" alt="Hal 4"></div>
+      <div class="page" data-page-name="Hal 03"><img src="images/hal-03.webp" alt="Hal 3"></div>
+      <div class="page" data-page-name="Hal 02"><img src="images/hal-02.webp" alt="Hal 2"></div>
+      <div class="page" data-page-name="Hal 01"><img src="images/hal-01.webp" alt="Hal 1"></div>
+
+      <!-- Cover Depan (Di posisi akhir agar terbuka paling awal) -->
+      <div class="page" data-page-name="Cover Depan"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
     </div>
   </div>
 
@@ -170,6 +170,8 @@
   
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      const totalPagesCount = 22;
+
       const pageFlip = new St.PageFlip(
         document.getElementById("flipbook"),
         {
@@ -182,12 +184,11 @@
           maxHeight: 700,
           showCover: false,
           usePortrait: true,
-          startPage: 0,
+          startPage: totalPagesCount - 1, // Memulai langsung di Cover Depan
           drawShadow: true,
           maxShadowOpacity: 0.6,
           flippingTime: 700,
-          swipeDistance: 30,
-          clickEventForward: false
+          swipeDistance: 30
         }
       );
 
@@ -212,29 +213,29 @@
       }
 
       function updatePageInfo() {
-        const currentPage = pageFlip.getCurrentPageIndex() + 1;
-        const totalPages = pageFlip.getPageCount();
-        pageInfo.textContent = `${currentPage} / ${totalPages}`;
+        // Menghitung halaman aktif dalam alur RTL
+        const currentInternalIndex = pageFlip.getCurrentPageIndex();
+        const displayPage = totalPagesCount - currentInternalIndex;
+        pageInfo.textContent = `${displayPage} / ${totalPagesCount}`;
       }
 
-      // Next -> Membalik halaman ke depan dari arah KIRI ke KANAN ('top-left')
+      // Tombol Next (Kiri) -> Membalik kertas dari Kiri ke Kanan (Maju Halaman Al-Qur'an)
       btnNext.addEventListener("click", () => {
-        const currentIndex = pageFlip.getCurrentPageIndex();
-        const totalPages = pageFlip.getPageCount();
-        if (currentIndex === totalPages - 1) {
+        const currentInternalIndex = pageFlip.getCurrentPageIndex();
+        if (currentInternalIndex === 0) {
           showToast("Ini adalah halaman terakhir");
         } else {
-          pageFlip.flip(currentIndex + 1, "top-left");
+          pageFlip.flipPrev();
         }
       });
 
-      // Prev -> Kembali ke halaman sebelumnya ditarik dari KANAN ke KIRI ('top-right')
+      // Tombol Prev (Kanan) -> Membalik kertas dari Kanan ke Kiri (Mundur Halaman Al-Qur'an)
       btnPrev.addEventListener("click", () => {
-        const currentIndex = pageFlip.getCurrentPageIndex();
-        if (currentIndex === 0) {
+        const currentInternalIndex = pageFlip.getCurrentPageIndex();
+        if (currentInternalIndex === totalPagesCount - 1) {
           showToast("Ini adalah halaman awal");
         } else {
-          pageFlip.flip(currentIndex - 1, "top-right");
+          pageFlip.flipNext();
         }
       });
 
