@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Flipbook Single Page</title>
+  <title>Flipbook Al-Qur'an (RTL)</title>
   
   <style>
     * {
@@ -20,7 +20,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px 10px 80px 10px; /* Padding bawah untuk memberi ruang tombol floating */
+      padding: 20px 10px 80px 10px;
     }
 
     /* Container Flipbook */
@@ -54,7 +54,7 @@
       display: block;
     }
 
-    /* Tombol Navigasi dibuat Fixed (Selalu Muncul di Bawah Layar) */
+    /* Tombol Navigasi Fixed Bawah (Tetap dari Kiri ke Kanan Visualnya) */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -71,6 +71,7 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       z-index: 99;
+      direction: ltr; /* Memastikan tata letak tombol tetap standar secara visual */
     }
 
     .btn {
@@ -113,6 +114,7 @@
       transition: opacity 0.3s ease, visibility 0.3s ease;
       z-index: 100;
       pointer-events: none;
+      direction: ltr;
     }
 
     .toast.show {
@@ -129,25 +131,40 @@
   <!-- Area Buku -->
   <div class="container">
     <div id="flipbook">
-      <div class="page"><img src="https://picsum.photos/id/10/400/600" alt="Cover Depan"></div>
-      <div class="page"><img src="https://picsum.photos/id/11/400/600" alt="Hal 1"></div>
-      <div class="page"><img src="https://picsum.photos/id/12/400/600" alt="Hal 2"></div>
-      <div class="page"><img src="https://picsum.photos/id/13/400/600" alt="Hal 3"></div>
-      <div class="page"><img src="https://picsum.photos/id/14/400/600" alt="Hal 4"></div>
-      <div class="page"><img src="https://picsum.photos/id/15/400/600" alt="Hal 5"></div>
-      <div class="page"><img src="https://picsum.photos/id/16/400/600" alt="Hal 6"></div>
-      <div class="page"><img src="https://picsum.photos/id/17/400/600" alt="Hal 7"></div>
-      <div class="page"><img src="https://picsum.photos/id/18/400/600" alt="Hal 8"></div>
-      <div class="page"><img src="https://picsum.photos/id/19/400/600" alt="Hal 9"></div>
-      <div class="page"><img src="https://picsum.photos/id/20/400/600" alt="Hal 10"></div>
-      <div class="page"><img src="https://picsum.photos/id/21/400/600" alt="Cover Belakang"></div>
+      <!-- Cover Depan -->
+      <div class="page"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
+
+      <!-- Isi Halaman 1 - 20 (Al-Qur'an) -->
+      <div class="page"><img src="images/hal-01.webp" alt="Hal 1"></div>
+      <div class="page"><img src="images/hal-02.webp" alt="Hal 2"></div>
+      <div class="page"><img src="images/hal-03.webp" alt="Hal 3"></div>
+      <div class="page"><img src="images/hal-04.webp" alt="Hal 4"></div>
+      <div class="page"><img src="images/hal-05.webp" alt="Hal 5"></div>
+      <div class="page"><img src="images/hal-06.webp" alt="Hal 6"></div>
+      <div class="page"><img src="images/hal-07.webp" alt="Hal 7"></div>
+      <div class="page"><img src="images/hal-08.webp" alt="Hal 8"></div>
+      <div class="page"><img src="images/hal-09.webp" alt="Hal 9"></div>
+      <div class="page"><img src="images/hal-10.webp" alt="Hal 10"></div>
+      <div class="page"><img src="images/hal-11.webp" alt="Hal 11"></div>
+      <div class="page"><img src="images/hal-12.webp" alt="Hal 12"></div>
+      <div class="page"><img src="images/hal-13.webp" alt="Hal 13"></div>
+      <div class="page"><img src="images/hal-14.webp" alt="Hal 14"></div>
+      <div class="page"><img src="images/hal-15.webp" alt="Hal 15"></div>
+      <div class="page"><img src="images/hal-16.webp" alt="Hal 16"></div>
+      <div class="page"><img src="images/hal-17.webp" alt="Hal 17"></div>
+      <div class="page"><img src="images/hal-18.webp" alt="Hal 18"></div>
+      <div class="page"><img src="images/hal-19.webp" alt="Hal 19"></div>
+      <div class="page"><img src="images/hal-20.webp" alt="Hal 20"></div>
+
+      <!-- Cover Belakang -->
+      <div class="page"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
     </div>
   </div>
 
-  <!-- Tombol Navigasi Melayang di Bawah -->
+  <!-- Tombol Navigasi Bawah -->
   <div class="controls">
     <button class="btn" id="btn-prev">❮ Prev</button>
-    <span class="page-info" id="page-info">1 / 12</span>
+    <span class="page-info" id="page-info">1 / 22</span>
     <button class="btn" id="btn-next">Next ❯</button>
   </div>
 
@@ -160,7 +177,7 @@
         {
           width: 360,
           height: 540,
-          size: "fixed",  /* Menggunakan fixed agar rasio gambar terjamin presisi */
+          size: "fixed",
           minWidth: 260,
           maxWidth: 450,
           minHeight: 380,
@@ -169,7 +186,10 @@
           usePortrait: true,
           startPage: 0,
           drawShadow: true,
-          maxShadowOpacity: 0.6
+          maxShadowOpacity: 0.6,
+          /* Konfigurasi Utama Membaca Kanan ke Kiri (Al-Qur'an) */
+          rtl: true,
+          direction: "rtl"
         }
       );
 
@@ -199,6 +219,7 @@
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
+      /* Tombol Prev membalik ke halaman sebelumnya sesuai alur RTL */
       btnPrev.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         if (currentIndex === 0) {
@@ -208,6 +229,7 @@
         }
       });
 
+      /* Tombol Next membalik ke halaman berikutnya sesuai alur RTL */
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
