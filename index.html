@@ -54,7 +54,7 @@
       display: block;
     }
 
-    /* Tombol Navigasi Bawah */
+    /* Panel Tombol Navigasi Bawah */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -159,11 +159,13 @@
     </div>
   </div>
 
-  <!-- Tombol Navigasi Bawah -->
+  <!-- Tombol Navigasi Bawah (Posisi Disesuaikan untuk Al-Qur'an) -->
   <div class="controls">
-    <button class="btn" id="btn-prev">❮ Prev</button>
+    <!-- Tombol Next di Kiri (Maju Halaman) -->
+    <button class="btn" id="btn-next">❮ Next</button>
     <span class="page-info" id="page-info">1 / 22</span>
-    <button class="btn" id="btn-next">Next ❯</button>
+    <!-- Tombol Prev di Kanan (Kembali/Mundur Halaman) -->
+    <button class="btn" id="btn-prev">Prev ❯</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
@@ -217,17 +219,7 @@
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
-      // Tombol Prev -> Mundur Halaman
-      btnPrev.addEventListener("click", () => {
-        const currentIndex = pageFlip.getCurrentPageIndex();
-        if (currentIndex === 0) {
-          showToast("Ini adalah halaman awal");
-        } else {
-          pageFlip.flipPrev();
-        }
-      });
-
-      // Tombol Next -> Maju Halaman
+      // Tombol Next (Di sebelah kiri) -> Maju Halaman Selanjutnya
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
@@ -235,6 +227,16 @@
           showToast("Ini adalah halaman terakhir");
         } else {
           pageFlip.flipNext();
+        }
+      });
+
+      // Tombol Prev (Di sebelah kanan) -> Kembali ke Halaman Sebelumnya
+      btnPrev.addEventListener("click", () => {
+        const currentIndex = pageFlip.getCurrentPageIndex();
+        if (currentIndex === 0) {
+          showToast("Ini adalah halaman awal");
+        } else {
+          pageFlip.flipPrev();
         }
       });
 
