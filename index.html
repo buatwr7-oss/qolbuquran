@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flipbook Single Page</title>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #0f172a;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+    }
+
+    .app-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100vh;
+      padding: 15px 10px;
+    }
+
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 0;
+    }
+
+    #flipbook {
+      width: 100%;
+      height: 100%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      overflow: hidden;
+    }
+
+    .page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 400px;
+      padding-top: 10px;
+      color: #ffffff;
+    }
+
+    .btn {
+      background-color: #334155;
+      color: #ffffff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .btn:active {
+      background-color: #0284c7;
+    }
+
+    .page-info {
+      font-size: 14px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* CSS Pesan Pemberitahuan (Toast) */
+    .toast {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #38bdf8;
+      color: #0f172a;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Pop-up Pemberitahuan -->
+    <div id="toast" class="toast">Ini adalah halaman awal</div>
+
+    <!-- Area Buku -->
+    <div class="container">
+      <div id="flipbook">
+        <div class="page"><img src="https://picsum.photos/id/10/400/600" alt="Cover Depan"></div>
+        <div class="page"><img src="https://picsum.photos/id/11/400/600" alt="Hal 1"></div>
+        <div class="page"><img src="https://picsum.photos/id/12/400/600" alt="Hal 2"></div>
+        <div class="page"><img src="https://picsum.photos/id/13/400/600" alt="Hal 3"></div>
+        <div class="page"><img src="https://picsum.photos/id/14/400/600" alt="Hal 4"></div>
+        <div class="page"><img src="https://picsum.photos/id/15/400/600" alt="Hal 5"></div>
+        <div class="page"><img src="https://picsum.photos/id/16/400/600" alt="Hal 6"></div>
+        <div class="page"><img src="https://picsum.photos/id/17/400/600" alt="Hal 7"></div>
+        <div class="page"><img src="https://picsum.photos/id/18/400/600" alt="Hal 8"></div>
+        <div class="page"><img src="https://picsum.photos/id/19/400/600" alt="Hal 9"></div>
+        <div class="page"><img src="https://picsum.photos/id/20/400/600" alt="Hal 10"></div>
+        <div class="page"><img src="https://picsum.photos/id/21/400/600" alt="Cover Belakang"></div>
+      </div>
+    </div>
+
+    <!-- Tombol & Indikator Halaman -->
+    <div class="controls">
+      <button class="btn" id="btn-prev">❮ Prev</button>
+      <span class="page-info" id="page-info">1 / 12</span>
+      <button class="btn" id="btn-next">Next ❯</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const pageFlip = new St.PageFlip(
+        document.getElementById("flipbook"),
+        {
+          width: 360,
+          height: 540,
+          size: "stretch",
+          minWidth: 260,
+          maxWidth: 450,
+          minHeight: 380,
+          maxHeight: 700,
+          showCover: false,
+          usePortrait: true,
+          startPage: 0,
+          drawShadow: true,
+          maxShadowOpacity: 0.6
+        }
+      );
+
+      const pages = document.querySelectorAll(".page");
+      pageFlip.loadFromHTML(pages);
+
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+      const pageInfo = document.getElementById("page-info");
+      const toast = document.getElementById("toast");
+
+      let toastTimeout;
+
+      // Fungsi untuk Menampilkan Notifikasi
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2000); // Hilang setelah 2 detik
+      }
+
+      // Update Nomor Halaman
+      function updatePageInfo() {
+        const currentPage = pageFlip.getCurrentPageIndex() + 1;
+        const totalPages = pageFlip.getPageCount();
+        pageInfo.textContent = `${currentPage} / ${totalPages}`;
+      }
+
+      // Navigasi Prev
+      btnPrev.addEventListener("click", () => {
+        const currentIndex = pageFlip.getCurrentPageIndex();
+        if (currentIndex === 0) {
+          showToast("Ini adalah halaman awal");
+        } else {
+          pageFlip.flipPrev();
+        }
+      });
+
+      // Navigasi Next
+      btnNext.addEventListener("click", () => {
+        const currentIndex = pageFlip.getCurrentPageIndex();
+        const totalPages = pageFlip.getPageCount();
+        if (currentIndex === totalPages - 1) {
+          showToast("Ini adalah halaman terakhir");
+        } else {
+          pageFlip.flipNext();
+        }
+      });
+
+      // Event Kertas Berbalik (jika di-swipe manual)
+      pageFlip.on("flip", () => {
+        updatePageInfo();
+      });
+
+      updatePageInfo();
+    });
+  </script>
+</body>
+</html>
