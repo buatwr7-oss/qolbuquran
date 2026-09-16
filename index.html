@@ -178,23 +178,25 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Daftar path gambar dalam folder "gambar/"
+      // Sesuaikan nama file .webp dengan milikmu
       const pageImages = [
-        "https://picsum.photos/id/10/320/480",
-        "https://picsum.photos/id/20/320/480",
-        "https://picsum.photos/id/30/320/480",
-        "https://picsum.photos/id/40/320/480",
-        "https://picsum.photos/id/50/320/480",
-        "https://picsum.photos/id/60/320/480",
-        "https://picsum.photos/id/70/320/480",
-        "https://picsum.photos/id/80/320/480",
-        "https://picsum.photos/id/90/320/480",
-        "https://picsum.photos/id/100/320/480",
-        "https://picsum.photos/id/101/320/480",
-        "https://picsum.photos/id/102/320/480",
-        "https://picsum.photos/id/103/320/480",
-        "https://picsum.photos/id/104/320/480",
-        "https://picsum.photos/id/106/320/480",
-        "https://picsum.photos/id/107/320/480"
+        "gambar/1.webp",
+        "gambar/2.webp",
+        "gambar/3.webp",
+        "gambar/4.webp",
+        "gambar/5.webp",
+        "gambar/6.webp",
+        "gambar/7.webp",
+        "gambar/8.webp",
+        "gambar/9.webp",
+        "gambar/10.webp",
+        "gambar/11.webp",
+        "gambar/12.webp",
+        "gambar/13.webp",
+        "gambar/14.webp",
+        "gambar/15.webp",
+        "gambar/16.webp"
       ];
 
       const book = document.getElementById("book");
@@ -237,7 +239,6 @@
       }
 
       function updatePageInfo() {
-        // Tampilkan teks info halaman (misal: 16/16)
         const displayIndex = Math.min(currentIndex + 1, totalPages);
         pageInfo.textContent = `${displayIndex} / ${totalPages}`;
       }
@@ -248,7 +249,6 @@
           currentIndex++;
           updatePageInfo();
 
-          // Jika sudah membalik halaman terakhir
           if (currentIndex === totalPages) {
             showToast("Ini adalah halaman terakhir");
           }
