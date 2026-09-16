@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" dir="rtl">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -24,37 +24,86 @@
       overflow: hidden;
     }
 
-    /* Container Flipbook */
+    /* Container Perspective 3D */
     .container {
-      width: 360px;
-      height: 540px;
+      width: 320px;
+      height: 480px;
+      position: relative;
+      perspective: 1500px;
+    }
+
+    .book {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    /* Tiap Lembaran Halaman */
+    .page {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* Titik Engsel/Jilidan Terkunci di KANAN */
+      transform-origin: right center;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      background-color: #ffffff;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Bagian Depan & Belakang Lembaran */
+    .page-front, .page-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      position: relative;
     }
 
-    #flipbook {
-      width: 360px;
-      height: 540px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-    }
-
-    #flipbook .page {
-      width: 360px;
-      height: 540px;
-      background-color: #ffffff;
-      overflow: hidden;
-    }
-
-    #flipbook .page img {
+    .page-front img, .page-back img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
+      pointer-events: none;
     }
 
-    /* Panel Tombol Navigasi Bawah */
+    /* Sisi belakang lembaran dibalik 180 deg */
+    .page-back {
+      transform: rotateY(180deg);
+      background-color: #f1f5f9;
+    }
+
+    /* Teks Nomor Halaman jika gambar loading */
+    .page-number {
+      position: absolute;
+      bottom: 15px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Efek Membalik ke Kanan */
+    .page.flipped {
+      transform: rotateY(180deg);
+      pointer-events: none;
+    }
+
+    /* Panel Tombol Navigasi */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -71,7 +120,6 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       z-index: 99;
-      direction: ltr; /* Mencegah tata letak tombol terbalik */
     }
 
     .btn {
@@ -83,7 +131,6 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      user-select: none;
     }
 
     .btn:active {
@@ -96,7 +143,7 @@
       font-weight: 600;
     }
 
-    /* CSS Pesan Pemberitahuan (Toast) */
+    /* Toast Notification */
     .toast {
       position: fixed;
       top: 20px;
@@ -113,8 +160,6 @@
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
       z-index: 100;
-      pointer-events: none;
-      direction: ltr;
     }
 
     .toast.show {
@@ -125,115 +170,163 @@
 </head>
 <body>
 
-  <!-- Pop-up Pemberitahuan -->
   <div id="toast" class="toast">Ini adalah halaman awal</div>
 
-  <!-- Area Buku -->
   <div class="container">
-    <div id="flipbook">
-      <!-- Cover Depan -->
-      <div class="page"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
+    <div class="book" id="book">
+      
+      <!-- Halaman 1 (Cover Depan) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/10/320/480" alt="Cover Depan">
+          <span class="page-number">Cover Depan</span>
+        </div>
+      </div>
 
-      <!-- Isi Halaman Al-Qur'an (1 - 20) -->
-      <div class="page"><img src="images/hal-01.webp" alt="Hal 1"></div>
-      <div class="page"><img src="images/hal-02.webp" alt="Hal 2"></div>
-      <div class="page"><img src="images/hal-03.webp" alt="Hal 3"></div>
-      <div class="page"><img src="images/hal-04.webp" alt="Hal 4"></div>
-      <div class="page"><img src="images/hal-05.webp" alt="Hal 5"></div>
-      <div class="page"><img src="images/hal-06.webp" alt="Hal 6"></div>
-      <div class="page"><img src="images/hal-07.webp" alt="Hal 7"></div>
-      <div class="page"><img src="images/hal-08.webp" alt="Hal 8"></div>
-      <div class="page"><img src="images/hal-09.webp" alt="Hal 9"></div>
-      <div class="page"><img src="images/hal-10.webp" alt="Hal 10"></div>
-      <div class="page"><img src="images/hal-11.webp" alt="Hal 11"></div>
-      <div class="page"><img src="images/hal-12.webp" alt="Hal 12"></div>
-      <div class="page"><img src="images/hal-13.webp" alt="Hal 13"></div>
-      <div class="page"><img src="images/hal-14.webp" alt="Hal 14"></div>
-      <div class="page"><img src="images/hal-15.webp" alt="Hal 15"></div>
-      <div class="page"><img src="images/hal-16.webp" alt="Hal 16"></div>
-      <div class="page"><img src="images/hal-17.webp" alt="Hal 17"></div>
-      <div class="page"><img src="images/hal-18.webp" alt="Hal 18"></div>
-      <div class="page"><img src="images/hal-19.webp" alt="Hal 19"></div>
-      <div class="page"><img src="images/hal-20.webp" alt="Hal 20"></div>
+      <!-- Halaman 2 (Hal 1) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/20/320/480" alt="Hal 1">
+          <span class="page-number">Halaman 1</span>
+        </div>
+      </div>
 
-      <!-- Cover Belakang -->
-      <div class="page"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
+      <!-- Halaman 3 (Hal 2) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/30/320/480" alt="Hal 2">
+          <span class="page-number">Halaman 2</span>
+        </div>
+      </div>
+
+      <!-- Halaman 4 (Hal 3) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/40/320/480" alt="Hal 3">
+          <span class="page-number">Halaman 3</span>
+        </div>
+      </div>
+
+      <!-- Halaman 5 (Hal 4) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/50/320/480" alt="Hal 4">
+          <span class="page-number">Halaman 4</span>
+        </div>
+      </div>
+
+      <!-- Halaman 6 (Cover Belakang) -->
+      <div class="page">
+        <div class="page-front">
+          <img src="https://picsum.photos/id/60/320/480" alt="Cover Belakang">
+          <span class="page-number">Cover Belakang</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Tombol Navigasi Bawah -->
   <div class="controls">
     <button class="btn" id="btn-next">❮ Next</button>
-    <span class="page-info" id="page-info">1 / 22</span>
+    <span class="page-info" id="page-info">1 / 6</span>
     <button class="btn" id="btn-prev">Prev ❯</button>
   </div>
 
-  <!-- Dependensi turn.js -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
-  
   <script>
-    $(document).ready(function () {
-      const $flipbook = $('#flipbook');
-      const $toast = $('#toast');
-      const $pageInfo = $('#page-info');
+    document.addEventListener("DOMContentLoaded", function () {
+      const pages = document.querySelectorAll(".page");
+      const btnNext = document.getElementById("btn-next");
+      const btnPrev = document.getElementById("btn-prev");
+      const pageInfo = document.getElementById("page-info");
+      const toast = document.getElementById("toast");
+
+      const totalPages = pages.length;
+      let currentIndex = 0;
       let toastTimeout;
 
+      // Atur Tumpukan Z-Index
+      function setupPages() {
+        pages.forEach((page, index) => {
+          page.style.zIndex = totalPages - index;
+        });
+      }
+
       function showToast(message) {
-        $toast.text(message).addClass('show');
+        toast.textContent = message;
+        toast.classList.add("show");
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
-          $toast.removeClass('show');
+          toast.classList.remove("show");
         }, 2000);
       }
 
-      function updatePageInfo(page) {
-        const totalPages = $flipbook.turn('pages');
-        $pageInfo.text(`${page} / ${totalPages}`);
+      function updatePageInfo() {
+        pageInfo.textContent = `${currentIndex + 1} / ${totalPages}`;
       }
 
-      // Inisialisasi Turn.js khusus mode Single Page + RTL (Al-Qur'an)
-      $flipbook.turn({
-        width: 360,
-        height: 540,
-        autoCenter: true,
-        display: 'single', // Tampilan 1 halaman di tengah
-        direction: 'rtl', // Mengunci engsel/jilid di KANAN
-        acceleration: true,
-        gradients: true,
-        elevation: 50,
-        duration: 800,
-        when: {
-          turned: function (e, page) {
-            updatePageInfo(page);
-          }
-        }
-      });
-
-      // Tombol Next (Maju ke halaman Al-Qur'an selanjutnya)
-      $('#btn-next').on('click', function () {
-        const currentPage = $flipbook.turn('page');
-        const totalPages = $flipbook.turn('pages');
-
-        if (currentPage >= totalPages) {
+      // Maju (Flip ke Kanan)
+      function flipNext() {
+        if (currentIndex < totalPages - 1) {
+          pages[currentIndex].classList.add("flipped");
+          currentIndex++;
+          updatePageInfo();
+        } else {
           showToast("Ini adalah halaman terakhir");
-        } else {
-          $flipbook.turn('next');
         }
-      });
+      }
 
-      // Tombol Prev (Kembali ke halaman sebelumnya)
-      $('#btn-prev').on('click', function () {
-        const currentPage = $flipbook.turn('page');
-
-        if (currentPage <= 1) {
+      // Mundur (Kembali dari Kanan ke Kiri)
+      function flipPrev() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          pages[currentIndex].classList.remove("flipped");
+          updatePageInfo();
+        } else {
           showToast("Ini adalah halaman awal");
-        } else {
-          $flipbook.turn('previous');
         }
+      }
+
+      btnNext.addEventListener("click", flipNext);
+      btnPrev.addEventListener("click", flipPrev);
+
+      // Gestur Touch & Mouse Drag
+      let startX = 0;
+      let endX = 0;
+      const container = document.querySelector(".container");
+
+      container.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+
+      container.addEventListener("touchend", (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+      }, { passive: true });
+
+      let isDragging = false;
+      container.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
       });
 
-      updatePageInfo(1);
+      container.addEventListener("mouseup", (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        endX = e.clientX;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const threshold = 30;
+        if (startX - endX > threshold) {
+          flipNext();
+        } else if (endX - startX > threshold) {
+          flipPrev();
+        }
+      }
+
+      setupPages();
+      updatePageInfo();
     });
   </script>
 </body>
