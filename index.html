@@ -12,33 +12,26 @@
       padding: 0;
     }
     
-    html, body {
-      width: 100%;
-      height: 100%;
+    body {
       background-color: #0f172a;
       font-family: system-ui, -apple-system, sans-serif;
-      overflow: hidden;
-    }
-
-    .app-wrapper {
-      position: relative;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      height: 100vh;
-      padding: 15px 10px;
+      justify-content: center;
+      padding: 20px 10px 80px 10px; /* Padding bawah untuk memberi ruang tombol floating */
     }
 
+    /* Container Flipbook */
     .container {
-      flex: 1;
       width: 100%;
-      max-width: 400px;
+      max-width: 380px;
+      height: 570px;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 0;
+      position: relative;
     }
 
     #flipbook {
@@ -61,21 +54,30 @@
       display: block;
     }
 
+    /* Tombol Navigasi dibuat Fixed (Selalu Muncul di Bawah Layar) */
     .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      max-width: 400px;
-      padding-top: 10px;
-      color: #ffffff;
+      width: 90%;
+      max-width: 380px;
+      background-color: rgba(30, 41, 59, 0.95);
+      padding: 10px 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 99;
     }
 
     .btn {
-      background-color: #334155;
+      background-color: #0284c7;
       color: #ffffff;
       border: none;
-      padding: 12px 20px;
+      padding: 10px 18px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: bold;
@@ -84,19 +86,19 @@
     }
 
     .btn:active {
-      background-color: #0284c7;
+      background-color: #0369a1;
     }
 
     .page-info {
       font-size: 14px;
-      color: #94a3b8;
-      font-weight: 500;
+      color: #f8fafc;
+      font-weight: 600;
     }
 
     /* CSS Pesan Pemberitahuan (Toast) */
     .toast {
-      position: absolute;
-      top: 25px;
+      position: fixed;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       background-color: #38bdf8;
@@ -121,34 +123,32 @@
 </head>
 <body>
 
-  <div class="app-wrapper">
-    <!-- Pop-up Pemberitahuan -->
-    <div id="toast" class="toast">Ini adalah halaman awal</div>
+  <!-- Pop-up Pemberitahuan -->
+  <div id="toast" class="toast">Ini adalah halaman awal</div>
 
-    <!-- Area Buku -->
-    <div class="container">
-      <div id="flipbook">
-        <div class="page"><img src="https://picsum.photos/id/10/400/600" alt="Cover Depan"></div>
-        <div class="page"><img src="https://picsum.photos/id/11/400/600" alt="Hal 1"></div>
-        <div class="page"><img src="https://picsum.photos/id/12/400/600" alt="Hal 2"></div>
-        <div class="page"><img src="https://picsum.photos/id/13/400/600" alt="Hal 3"></div>
-        <div class="page"><img src="https://picsum.photos/id/14/400/600" alt="Hal 4"></div>
-        <div class="page"><img src="https://picsum.photos/id/15/400/600" alt="Hal 5"></div>
-        <div class="page"><img src="https://picsum.photos/id/16/400/600" alt="Hal 6"></div>
-        <div class="page"><img src="https://picsum.photos/id/17/400/600" alt="Hal 7"></div>
-        <div class="page"><img src="https://picsum.photos/id/18/400/600" alt="Hal 8"></div>
-        <div class="page"><img src="https://picsum.photos/id/19/400/600" alt="Hal 9"></div>
-        <div class="page"><img src="https://picsum.photos/id/20/400/600" alt="Hal 10"></div>
-        <div class="page"><img src="https://picsum.photos/id/21/400/600" alt="Cover Belakang"></div>
-      </div>
+  <!-- Area Buku -->
+  <div class="container">
+    <div id="flipbook">
+      <div class="page"><img src="https://picsum.photos/id/10/400/600" alt="Cover Depan"></div>
+      <div class="page"><img src="https://picsum.photos/id/11/400/600" alt="Hal 1"></div>
+      <div class="page"><img src="https://picsum.photos/id/12/400/600" alt="Hal 2"></div>
+      <div class="page"><img src="https://picsum.photos/id/13/400/600" alt="Hal 3"></div>
+      <div class="page"><img src="https://picsum.photos/id/14/400/600" alt="Hal 4"></div>
+      <div class="page"><img src="https://picsum.photos/id/15/400/600" alt="Hal 5"></div>
+      <div class="page"><img src="https://picsum.photos/id/16/400/600" alt="Hal 6"></div>
+      <div class="page"><img src="https://picsum.photos/id/17/400/600" alt="Hal 7"></div>
+      <div class="page"><img src="https://picsum.photos/id/18/400/600" alt="Hal 8"></div>
+      <div class="page"><img src="https://picsum.photos/id/19/400/600" alt="Hal 9"></div>
+      <div class="page"><img src="https://picsum.photos/id/20/400/600" alt="Hal 10"></div>
+      <div class="page"><img src="https://picsum.photos/id/21/400/600" alt="Cover Belakang"></div>
     </div>
+  </div>
 
-    <!-- Tombol & Indikator Halaman -->
-    <div class="controls">
-      <button class="btn" id="btn-prev">❮ Prev</button>
-      <span class="page-info" id="page-info">1 / 12</span>
-      <button class="btn" id="btn-next">Next ❯</button>
-    </div>
+  <!-- Tombol Navigasi Melayang di Bawah -->
+  <div class="controls">
+    <button class="btn" id="btn-prev">❮ Prev</button>
+    <span class="page-info" id="page-info">1 / 12</span>
+    <button class="btn" id="btn-next">Next ❯</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
@@ -160,7 +160,7 @@
         {
           width: 360,
           height: 540,
-          size: "stretch",
+          size: "fixed",  /* Menggunakan fixed agar rasio gambar terjamin presisi */
           minWidth: 260,
           maxWidth: 450,
           minHeight: 380,
@@ -183,7 +183,6 @@
 
       let toastTimeout;
 
-      // Fungsi untuk Menampilkan Notifikasi
       function showToast(message) {
         toast.textContent = message;
         toast.classList.add("show");
@@ -191,17 +190,15 @@
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
           toast.classList.remove("show");
-        }, 2000); // Hilang setelah 2 detik
+        }, 2000);
       }
 
-      // Update Nomor Halaman
       function updatePageInfo() {
         const currentPage = pageFlip.getCurrentPageIndex() + 1;
         const totalPages = pageFlip.getPageCount();
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
-      // Navigasi Prev
       btnPrev.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         if (currentIndex === 0) {
@@ -211,7 +208,6 @@
         }
       });
 
-      // Navigasi Next
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
@@ -222,7 +218,6 @@
         }
       });
 
-      // Event Kertas Berbalik (jika di-swipe manual)
       pageFlip.on("flip", () => {
         updatePageInfo();
       });
