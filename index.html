@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Flipbook Al-Qur'an (RTL)</title>
+  <title>Flipbook Al-Qur'an</title>
   
   <style>
     * {
@@ -54,7 +54,7 @@
       display: block;
     }
 
-    /* Tombol Navigasi Fixed Bawah (Tetap dari Kiri ke Kanan Visualnya) */
+    /* Tombol Navigasi Fixed Bawah */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -71,7 +71,7 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       z-index: 99;
-      direction: ltr; /* Memastikan tata letak tombol tetap standar secara visual */
+      direction: ltr; /* Agar urutan fisik tombol di layar tidak tertukar secara visual */
     }
 
     .btn {
@@ -187,9 +187,9 @@
           startPage: 0,
           drawShadow: true,
           maxShadowOpacity: 0.6,
-          /* Konfigurasi Utama Membaca Kanan ke Kiri (Al-Qur'an) */
+          /* Konfigurasi Utama RTL Al-Qur'an */
           rtl: true,
-          direction: "rtl"
+          startZIndex: 1
         }
       );
 
@@ -219,24 +219,26 @@
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
-      /* Tombol Prev membalik ke halaman sebelumnya sesuai alur RTL */
+      /* Logika Tombol Sesuai Arah Membaca Al-Qur'an */
+      
+      // Tombol Prev (Kembali ke Halaman Sebelumnya)
       btnPrev.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         if (currentIndex === 0) {
           showToast("Ini adalah halaman awal");
         } else {
-          pageFlip.flipPrev();
+          pageFlip.flipNext(); // Di mode RTL, flipNext membalik mundur
         }
       });
 
-      /* Tombol Next membalik ke halaman berikutnya sesuai alur RTL */
+      // Tombol Next (Maju ke Halaman Berikutnya)
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
         if (currentIndex === totalPages - 1) {
           showToast("Ini adalah halaman terakhir");
         } else {
-          pageFlip.flipNext();
+          pageFlip.flipPrev(); // Di mode RTL, flipPrev membalik maju
         }
       });
 
