@@ -159,12 +159,10 @@
     </div>
   </div>
 
-  <!-- Tombol Navigasi Bawah (Posisi Disesuaikan untuk Al-Qur'an) -->
+  <!-- Tombol Navigasi Bawah -->
   <div class="controls">
-    <!-- Tombol Next di Kiri (Maju Halaman) -->
     <button class="btn" id="btn-next">❮ Next</button>
     <span class="page-info" id="page-info">1 / 22</span>
-    <!-- Tombol Prev di Kanan (Kembali/Mundur Halaman) -->
     <button class="btn" id="btn-prev">Prev ❯</button>
   </div>
 
@@ -189,7 +187,7 @@
           maxShadowOpacity: 0.6,
           flippingTime: 700,
           swipeDistance: 30,
-          clickEventForward: true
+          clickEventForward: false
         }
       );
 
@@ -219,24 +217,24 @@
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
-      // Tombol Next (Di sebelah kiri) -> Maju Halaman Selanjutnya
+      // Next -> Membalik halaman ke depan dari arah KIRI ke KANAN ('top-left')
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
         if (currentIndex === totalPages - 1) {
           showToast("Ini adalah halaman terakhir");
         } else {
-          pageFlip.flipNext();
+          pageFlip.flip(currentIndex + 1, "top-left");
         }
       });
 
-      // Tombol Prev (Di sebelah kanan) -> Kembali ke Halaman Sebelumnya
+      // Prev -> Kembali ke halaman sebelumnya ditarik dari KANAN ke KIRI ('top-right')
       btnPrev.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         if (currentIndex === 0) {
           showToast("Ini adalah halaman awal");
         } else {
-          pageFlip.flipPrev();
+          pageFlip.flip(currentIndex - 1, "top-right");
         }
       });
 
