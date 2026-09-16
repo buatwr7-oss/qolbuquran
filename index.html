@@ -53,7 +53,6 @@
       box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
       background-color: #ffffff;
       border-radius: 4px;
-      overflow: hidden;
       cursor: pointer;
       user-select: none;
     }
@@ -70,31 +69,24 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
-    .page-front img, .page-back img {
+    .page-front img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       pointer-events: none;
     }
 
-    /* Sisi belakang lembaran dibalik 180 deg */
+    /* Sisi Belakang: Krem Dot Pattern Halus + Bayangan Lipatan Engsel */
     .page-back {
       transform: rotateY(180deg);
-      background-color: #f1f5f9;
-    }
-
-    /* Teks Nomor Halaman jika gambar loading */
-    .page-number {
-      position: absolute;
-      bottom: 15px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: bold;
+      background-color: #faf9f6;
+      background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+      background-size: 16px 16px;
+      box-shadow: inset -6px 0 12px rgba(0, 0, 0, 0.08);
     }
 
     /* Efek Membalik ke Kanan */
@@ -174,81 +166,65 @@
 
   <div class="container">
     <div class="book" id="book">
-      
-      <!-- Halaman 1 (Cover Depan) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/10/320/480" alt="Cover Depan">
-          <span class="page-number">Cover Depan</span>
-        </div>
-      </div>
-
-      <!-- Halaman 2 (Hal 1) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/20/320/480" alt="Hal 1">
-          <span class="page-number">Halaman 1</span>
-        </div>
-      </div>
-
-      <!-- Halaman 3 (Hal 2) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/30/320/480" alt="Hal 2">
-          <span class="page-number">Halaman 2</span>
-        </div>
-      </div>
-
-      <!-- Halaman 4 (Hal 3) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/40/320/480" alt="Hal 3">
-          <span class="page-number">Halaman 3</span>
-        </div>
-      </div>
-
-      <!-- Halaman 5 (Hal 4) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/50/320/480" alt="Hal 4">
-          <span class="page-number">Halaman 4</span>
-        </div>
-      </div>
-
-      <!-- Halaman 6 (Cover Belakang) -->
-      <div class="page">
-        <div class="page-front">
-          <img src="https://picsum.photos/id/60/320/480" alt="Cover Belakang">
-          <span class="page-number">Cover Belakang</span>
-        </div>
-      </div>
-
+      <!-- Element halaman di-generate otomatis oleh JS -->
     </div>
   </div>
 
   <div class="controls">
     <button class="btn" id="btn-next">❮ Next</button>
-    <span class="page-info" id="page-info">1 / 6</span>
+    <span class="page-info" id="page-info">1 / 1</span>
     <button class="btn" id="btn-prev">Prev ❯</button>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const pages = document.querySelectorAll(".page");
+      const pageImages = [
+        "https://picsum.photos/id/10/320/480",
+        "https://picsum.photos/id/20/320/480",
+        "https://picsum.photos/id/30/320/480",
+        "https://picsum.photos/id/40/320/480",
+        "https://picsum.photos/id/50/320/480",
+        "https://picsum.photos/id/60/320/480",
+        "https://picsum.photos/id/70/320/480",
+        "https://picsum.photos/id/80/320/480",
+        "https://picsum.photos/id/90/320/480",
+        "https://picsum.photos/id/100/320/480",
+        "https://picsum.photos/id/101/320/480",
+        "https://picsum.photos/id/102/320/480",
+        "https://picsum.photos/id/103/320/480",
+        "https://picsum.photos/id/104/320/480",
+        "https://picsum.photos/id/106/320/480",
+        "https://picsum.photos/id/107/320/480"
+      ];
+
+      const book = document.getElementById("book");
       const btnNext = document.getElementById("btn-next");
       const btnPrev = document.getElementById("btn-prev");
       const pageInfo = document.getElementById("page-info");
       const toast = document.getElementById("toast");
 
-      const totalPages = pages.length;
+      let pages = [];
+      let totalPages = pageImages.length;
       let currentIndex = 0;
       let toastTimeout;
 
-      // Atur Tumpukan Z-Index
-      function setupPages() {
-        pages.forEach((page, index) => {
-          page.style.zIndex = totalPages - index;
+      function renderPages() {
+        book.innerHTML = "";
+        pageImages.forEach((src, index) => {
+          const pageDiv = document.createElement("div");
+          pageDiv.className = "page";
+          pageDiv.style.zIndex = totalPages - index;
+
+          pageDiv.innerHTML = `
+            <div class="page-front">
+              <img src="${src}" alt="Halaman ${index + 1}">
+            </div>
+            <div class="page-back"></div>
+          `;
+          book.appendChild(pageDiv);
         });
+
+        pages = document.querySelectorAll(".page");
       }
 
       function showToast(message) {
@@ -261,21 +237,26 @@
       }
 
       function updatePageInfo() {
-        pageInfo.textContent = `${currentIndex + 1} / ${totalPages}`;
+        // Tampilkan teks info halaman (misal: 16/16)
+        const displayIndex = Math.min(currentIndex + 1, totalPages);
+        pageInfo.textContent = `${displayIndex} / ${totalPages}`;
       }
 
-      // Maju (Flip ke Kanan)
       function flipNext() {
-        if (currentIndex < totalPages - 1) {
+        if (currentIndex < totalPages) {
           pages[currentIndex].classList.add("flipped");
           currentIndex++;
           updatePageInfo();
+
+          // Jika sudah membalik halaman terakhir
+          if (currentIndex === totalPages) {
+            showToast("Ini adalah halaman terakhir");
+          }
         } else {
           showToast("Ini adalah halaman terakhir");
         }
       }
 
-      // Mundur (Kembali dari Kanan ke Kiri)
       function flipPrev() {
         if (currentIndex > 0) {
           currentIndex--;
@@ -289,7 +270,6 @@
       btnNext.addEventListener("click", flipNext);
       btnPrev.addEventListener("click", flipPrev);
 
-      // Gestur Touch & Mouse Drag
       let startX = 0;
       let endX = 0;
       const container = document.querySelector(".container");
@@ -318,14 +298,14 @@
 
       function handleSwipe() {
         const threshold = 30;
-        if (startX - endX > threshold) {
+        if (endX - startX > threshold) {
           flipNext();
-        } else if (endX - startX > threshold) {
+        } else if (startX - endX > threshold) {
           flipPrev();
         }
       }
 
-      setupPages();
+      renderPages();
       updatePageInfo();
     });
   </script>
