@@ -21,12 +21,12 @@
       align-items: center;
       justify-content: center;
       padding: 20px 10px 80px 10px;
+      overflow: hidden;
     }
 
     /* Container Flipbook */
     .container {
-      width: 100%;
-      max-width: 720px; /* Lebar disesuaikan untuk mode tampilan 2 halaman/buku terbuka */
+      width: 360px;
       height: 540px;
       display: flex;
       justify-content: center;
@@ -35,19 +35,19 @@
     }
 
     #flipbook {
-      width: 100%;
-      height: 100%;
+      width: 360px;
+      height: 540px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     }
 
-    .page {
-      width: 100%;
-      height: 100%;
+    #flipbook .page {
+      width: 360px;
+      height: 540px;
       background-color: #ffffff;
       overflow: hidden;
     }
 
-    .page img {
+    #flipbook .page img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -71,7 +71,7 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       z-index: 99;
-      direction: ltr; /* Mencegah posisi tombol terbalik */
+      direction: ltr; /* Mencegah tata letak tombol terbalik */
     }
 
     .btn {
@@ -132,7 +132,7 @@
   <div class="container">
     <div id="flipbook">
       <!-- Cover Depan -->
-      <div class="page" data-density="hard"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
+      <div class="page"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
 
       <!-- Isi Halaman Al-Qur'an (1 - 20) -->
       <div class="page"><img src="images/hal-01.webp" alt="Hal 1"></div>
@@ -157,7 +157,7 @@
       <div class="page"><img src="images/hal-20.webp" alt="Hal 20"></div>
 
       <!-- Cover Belakang -->
-      <div class="page" data-density="hard"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
+      <div class="page"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
     </div>
   </div>
 
@@ -168,85 +168,72 @@
     <button class="btn" id="btn-prev">Prev ❯</button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
+  <!-- Dependensi turn.js -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
   
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const pageFlip = new St.PageFlip(
-        document.getElementById("flipbook"),
-        {
-          width: 360,
-          height: 540,
-          size: "stretch",
-          minWidth: 300,
-          maxWidth: 500,
-          minHeight: 400,
-          maxHeight: 700,
-          showCover: true,
-          usePortrait: false, // Membuka sebagai buku 2 halaman agar animasi jilid di tengah berfungsi alami
-          startPage: 0,
-          drawShadow: true,
-          maxShadowOpacity: 0.5,
-          flippingTime: 800,
-          swipeDistance: 30,
-          showPageCorners: true,
-          /* Mengaktifkan Engine RTL Bawaan */
-          rtl: true
-        }
-      );
-
-      const pages = document.querySelectorAll(".page");
-      pageFlip.loadFromHTML(pages);
-
-      const btnPrev = document.getElementById("btn-prev");
-      const btnNext = document.getElementById("btn-next");
-      const pageInfo = document.getElementById("page-info");
-      const toast = document.getElementById("toast");
-
+    $(document).ready(function () {
+      const $flipbook = $('#flipbook');
+      const $toast = $('#toast');
+      const $pageInfo = $('#page-info');
       let toastTimeout;
 
       function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add("show");
-
+        $toast.text(message).addClass('show');
         clearTimeout(toastTimeout);
         toastTimeout = setTimeout(() => {
-          toast.classList.remove("show");
+          $toast.removeClass('show');
         }, 2000);
       }
 
-      function updatePageInfo() {
-        const currentPage = pageFlip.getCurrentPageIndex() + 1;
-        const totalPages = pageFlip.getPageCount();
-        pageInfo.textContent = `${currentPage} / ${totalPages}`;
+      function updatePageInfo(page) {
+        const totalPages = $flipbook.turn('pages');
+        $pageInfo.text(`${page} / ${totalPages}`);
       }
 
-      // Tombol Next -> Membuka lembaran ke kanan (RTL bawaan)
-      btnNext.addEventListener("click", () => {
-        const currentIndex = pageFlip.getCurrentPageIndex();
-        const totalPages = pageFlip.getPageCount();
-        if (currentIndex >= totalPages - 1) {
+      // Inisialisasi Turn.js khusus mode Single Page + RTL (Al-Qur'an)
+      $flipbook.turn({
+        width: 360,
+        height: 540,
+        autoCenter: true,
+        display: 'single', // Tampilan 1 halaman di tengah
+        direction: 'rtl', // Mengunci engsel/jilid di KANAN
+        acceleration: true,
+        gradients: true,
+        elevation: 50,
+        duration: 800,
+        when: {
+          turned: function (e, page) {
+            updatePageInfo(page);
+          }
+        }
+      });
+
+      // Tombol Next (Maju ke halaman Al-Qur'an selanjutnya)
+      $('#btn-next').on('click', function () {
+        const currentPage = $flipbook.turn('page');
+        const totalPages = $flipbook.turn('pages');
+
+        if (currentPage >= totalPages) {
           showToast("Ini adalah halaman terakhir");
         } else {
-          pageFlip.flipNext();
+          $flipbook.turn('next');
         }
       });
 
-      // Tombol Prev -> Membalik lembaran ke kiri
-      btnPrev.addEventListener("click", () => {
-        const currentIndex = pageFlip.getCurrentPageIndex();
-        if (currentIndex === 0) {
-          showToast("Ini mepupakan halaman awal");
+      // Tombol Prev (Kembali ke halaman sebelumnya)
+      $('#btn-prev').on('click', function () {
+        const currentPage = $flipbook.turn('page');
+
+        if (currentPage <= 1) {
+          showToast("Ini adalah halaman awal");
         } else {
-          pageFlip.flipPrev();
+          $flipbook.turn('previous');
         }
       });
 
-      pageFlip.on("flip", () => {
-        updatePageInfo();
-      });
-
-      updatePageInfo();
+      updatePageInfo(1);
     });
   </script>
 </body>
