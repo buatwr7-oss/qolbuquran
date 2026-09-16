@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -26,8 +26,8 @@
     /* Container Flipbook */
     .container {
       width: 100%;
-      max-width: 380px;
-      height: 570px;
+      max-width: 720px; /* Lebar disesuaikan untuk mode tampilan 2 halaman/buku terbuka */
+      height: 540px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -71,6 +71,7 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
       z-index: 99;
+      direction: ltr; /* Mencegah posisi tombol terbalik */
     }
 
     .btn {
@@ -113,6 +114,7 @@
       transition: opacity 0.3s ease, visibility 0.3s ease;
       z-index: 100;
       pointer-events: none;
+      direction: ltr;
     }
 
     .toast.show {
@@ -126,11 +128,11 @@
   <!-- Pop-up Pemberitahuan -->
   <div id="toast" class="toast">Ini adalah halaman awal</div>
 
-  <!-- Area Buku (Urutan HTML Normal) -->
+  <!-- Area Buku -->
   <div class="container">
     <div id="flipbook">
       <!-- Cover Depan -->
-      <div class="page"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
+      <div class="page" data-density="hard"><img src="images/cover-depan.webp" alt="Cover Depan"></div>
 
       <!-- Isi Halaman Al-Qur'an (1 - 20) -->
       <div class="page"><img src="images/hal-01.webp" alt="Hal 1"></div>
@@ -155,7 +157,7 @@
       <div class="page"><img src="images/hal-20.webp" alt="Hal 20"></div>
 
       <!-- Cover Belakang -->
-      <div class="page"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
+      <div class="page" data-density="hard"><img src="images/cover-belakang.webp" alt="Cover Belakang"></div>
     </div>
   </div>
 
@@ -175,18 +177,21 @@
         {
           width: 360,
           height: 540,
-          size: "fixed",
-          minWidth: 260,
-          maxWidth: 450,
-          minHeight: 380,
+          size: "stretch",
+          minWidth: 300,
+          maxWidth: 500,
+          minHeight: 400,
           maxHeight: 700,
           showCover: true,
-          usePortrait: true,
+          usePortrait: false, // Membuka sebagai buku 2 halaman agar animasi jilid di tengah berfungsi alami
           startPage: 0,
           drawShadow: true,
-          maxShadowOpacity: 0.6,
-          flippingTime: 700,
-          clickEventForward: false
+          maxShadowOpacity: 0.5,
+          flippingTime: 800,
+          swipeDistance: 30,
+          showPageCorners: true,
+          /* Mengaktifkan Engine RTL Bawaan */
+          rtl: true
         }
       );
 
@@ -216,24 +221,24 @@
         pageInfo.textContent = `${currentPage} / ${totalPages}`;
       }
 
-      // Tombol Next (Maju Halaman): Gulung lembaran dari sudut kiri bawah ke dalam area kertas
+      // Tombol Next -> Membuka lembaran ke kanan (RTL bawaan)
       btnNext.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         const totalPages = pageFlip.getPageCount();
-        if (currentIndex === totalPages - 1) {
+        if (currentIndex >= totalPages - 1) {
           showToast("Ini adalah halaman terakhir");
         } else {
-          pageFlip.flip(currentIndex + 1, "bottom-left");
+          pageFlip.flipNext();
         }
       });
 
-      // Tombol Prev (Mundur Halaman): Gulung lembaran dari sudut kanan bawah
+      // Tombol Prev -> Membalik lembaran ke kiri
       btnPrev.addEventListener("click", () => {
         const currentIndex = pageFlip.getCurrentPageIndex();
         if (currentIndex === 0) {
-          showToast("Ini adalah halaman awal");
+          showToast("Ini mepupakan halaman awal");
         } else {
-          pageFlip.flip(currentIndex - 1, "bottom-right");
+          pageFlip.flipPrev();
         }
       });
 
