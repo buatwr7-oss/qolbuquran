@@ -11,25 +11,74 @@
       margin: 0;
       padding: 0;
     }
-    
+
+    :root {
+      --bg-color: #0f172a;
+      --panel-bg: rgba(30, 41, 59, 0.95);
+      --text-color: #f8fafc;
+    }
+
     body {
-      background-color: #0f172a;
+      background-color: var(--bg-color);
       font-family: system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px 10px 80px 10px;
+      padding: 10px;
       overflow: hidden;
+      /* Animasi Transisi Halus Ubah Tema Warna */
+      transition: background-color 0.4s ease-in-out;
     }
 
-    /* Container Perspective 3D */
+    /* Top Bar Menu Options */
+    .top-bar {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .icon-btn {
+      background: var(--panel-bg);
+      color: var(--text-color);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      font-size: 16px;
+      /* Animasi Tombol Press/Hover */
+      transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.88);
+    }
+
+    /* Container Perspective 3D & Responsif */
     .container {
-      width: 320px;
-      height: 480px;
+      width: min(85vw, 360px);
+      aspect-ratio: 2 / 3;
+      max-height: 65vh;
       position: relative;
       perspective: 1500px;
+      /* Animasi Smooth Zoom */
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Efek Zoom Container */
+    .container.zoomed {
+      transform: scale(1.5);
+      z-index: 80;
     }
 
     .book {
@@ -46,18 +95,21 @@
       position: absolute;
       top: 0;
       left: 0;
-      /* Titik Engsel/Jilidan Terkunci di KANAN */
       transform-origin: right center;
       transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      
+      box-shadow: 
+        -2px 0 8px rgba(0, 0, 0, 0.08),
+        -8px 4px 18px rgba(0, 0, 0, 0.12);
+        
       background-color: #ffffff;
       border-radius: 4px;
       cursor: pointer;
       user-select: none;
+      will-change: transform;
     }
 
-    /* Bagian Depan & Belakang Lembaran */
     .page-front, .page-back {
       width: 100%;
       height: 100%;
@@ -80,22 +132,21 @@
       pointer-events: none;
     }
 
-    /* Sisi Belakang: Krem Dot Pattern Halus + Bayangan Lipatan Engsel */
+    /* Sisi Belakang */
     .page-back {
       transform: rotateY(180deg);
       background-color: #faf9f6;
       background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
       background-size: 16px 16px;
-      box-shadow: inset -6px 0 12px rgba(0, 0, 0, 0.08);
+      box-shadow: inset -4px 0 8px rgba(0, 0, 0, 0.04);
     }
 
-    /* Efek Membalik ke Kanan */
     .page.flipped {
       transform: rotateY(180deg);
       pointer-events: none;
     }
 
-    /* Panel Tombol Navigasi */
+    /* Bottom Control Bar */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -106,12 +157,13 @@
       justify-content: space-between;
       width: 90%;
       max-width: 380px;
-      background-color: rgba(30, 41, 59, 0.95);
+      background-color: var(--panel-bg);
       padding: 10px 15px;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(5px);
       z-index: 99;
+      transition: background-color 0.3s ease;
     }
 
     .btn {
@@ -123,63 +175,176 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      /* Animasi Tekan Tombol Navigasi */
+      transition: transform 0.12s ease, background-color 0.2s ease;
     }
 
     .btn:active {
       background-color: #0369a1;
+      transform: scale(0.92);
     }
 
-    .page-info {
+    /* Interaktif Page Info */
+    .page-info-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-color);
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: 14px;
-      color: #f8fafc;
       font-weight: 600;
+      cursor: pointer;
+      /* Animasi Tekan Tombol Jump */
+      transition: transform 0.12s ease, background-color 0.2s ease;
     }
 
-    /* Toast Notification */
+    .page-info-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Modal Jump to Page dengan Animasi Pop-Up */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      /* Transisi Masuk/Keluar Overlay Modal */
+      transition: opacity 0.3s ease;
+      z-index: 200;
+    }
+
+    .modal.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      padding: 24px;
+      border-radius: 18px;
+      width: 85%;
+      max-width: 320px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      /* Animasi Zoom In Modal Box */
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content h3 {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .modal-content input[type="range"] {
+      width: 100%;
+      margin: 15px 0;
+      accent-color: #0284c7;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.95);
+    }
+
+    .modal-btn.confirm { background: #0284c7; color: #fff; }
+    .modal-btn.cancel { background: #475569; color: #fff; }
+
+    /* Toast Notification dengan Animasi Slide-Down */
     .toast {
       position: fixed;
       top: 20px;
       left: 50%;
-      transform: translateX(-50%);
+      /* Posisi Awal: Melayang sedikit di atas & Transparan */
+      transform: translate(-50%, -20px);
       background-color: #38bdf8;
       color: #0f172a;
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      /* Animasi Slide & Fade Halus */
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, visibility 0.3s ease;
       z-index: 100;
     }
 
     .toast.show {
       opacity: 1;
       visibility: visible;
+      /* Posisi Aktif: Turun ke bawah dengan efek bounce halus */
+      transform: translate(-50%, 0);
     }
   </style>
 </head>
 <body>
 
-  <div id="toast" class="toast">Ini adalah halaman awal</div>
-
-  <div class="container">
-    <div class="book" id="book">
-      <!-- Element halaman di-generate otomatis oleh JS -->
-    </div>
+  <!-- Top Action Bar -->
+  <div class="top-bar">
+    <button class="icon-btn" id="btn-theme" title="Ubah Tema">🌙</button>
+    <button class="icon-btn" id="btn-fullscreen" title="Layar Penuh">⛶</button>
   </div>
 
+  <div id="toast" class="toast">Ini adalah halaman awal</div>
+
+  <div class="container" id="container">
+    <div class="book" id="book"></div>
+  </div>
+
+  <!-- Bottom Navigation Panel -->
   <div class="controls">
     <button class="btn" id="btn-next">❮ Next</button>
-    <span class="page-info" id="page-info">1 / 1</span>
+    <button class="page-info-btn" id="btn-jump">1 / 16</button>
     <button class="btn" id="btn-prev">Prev ❯</button>
+  </div>
+
+  <!-- Modal Jump to Page -->
+  <div class="modal" id="modal-jump">
+    <div class="modal-content">
+      <h3>Lompat ke Halaman</h3>
+      <div id="modal-page-display" style="font-size: 26px; font-weight: bold; color: #38bdf8;">1</div>
+      <input type="range" id="jump-slider" min="1" max="16" value="1">
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="btn-modal-cancel">Batal</button>
+        <button class="modal-btn confirm" id="btn-modal-confirm">Buka</button>
+      </div>
+    </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Daftar path gambar dalam folder "gambar/"
-      // Sesuaikan nama file .webp dengan milikmu
       const pageImages = [
         "gambar/1.webp",
         "gambar/2.webp",
@@ -200,15 +365,63 @@
       ];
 
       const book = document.getElementById("book");
+      const container = document.getElementById("container");
       const btnNext = document.getElementById("btn-next");
       const btnPrev = document.getElementById("btn-prev");
-      const pageInfo = document.getElementById("page-info");
+      const btnJump = document.getElementById("btn-jump");
+      const btnTheme = document.getElementById("btn-theme");
+      const btnFullscreen = document.getElementById("btn-fullscreen");
       const toast = document.getElementById("toast");
+
+      // Elements Modal Jump
+      const modalJump = document.getElementById("modal-jump");
+      const jumpSlider = document.getElementById("jump-slider");
+      const modalPageDisplay = document.getElementById("modal-page-display");
+      const btnModalConfirm = document.getElementById("btn-modal-confirm");
+      const btnModalCancel = document.getElementById("btn-modal-cancel");
 
       let pages = [];
       let totalPages = pageImages.length;
       let currentIndex = 0;
       let toastTimeout;
+
+      // Theme Manager (Dark, Sepia, AMOLED)
+      const themes = [
+        { bg: "#0f172a", icon: "🌙" },
+        { bg: "#f4ebd9", icon: "📜" },
+        { bg: "#000000", icon: "🖤" }
+      ];
+      let currentThemeIdx = 0;
+
+      btnTheme.addEventListener("click", () => {
+        currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+        document.body.style.setProperty("--bg-color", themes[currentThemeIdx].bg);
+        btnTheme.textContent = themes[currentThemeIdx].icon;
+      });
+
+      // Fullscreen Toggle
+      btnFullscreen.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+
+      // Zoom Toggle via Double Click / Double Tap
+      container.addEventListener("dblclick", () => {
+        container.classList.toggle("zoomed");
+      });
+
+      // Preloading Images
+      function preloadNextImages(index) {
+        [index, index + 1, index + 2].forEach(i => {
+          if (i >= 0 && i < totalPages) {
+            const img = new Image();
+            img.src = pageImages[i];
+          }
+        });
+      }
 
       function renderPages() {
         book.innerHTML = "";
@@ -219,7 +432,7 @@
 
           pageDiv.innerHTML = `
             <div class="page-front">
-              <img src="${src}" alt="Halaman ${index + 1}">
+              <img src="${src}" alt="Halaman ${index + 1}" loading="${index < 2 ? 'eager' : 'lazy'}">
             </div>
             <div class="page-back"></div>
           `;
@@ -227,6 +440,8 @@
         });
 
         pages = document.querySelectorAll(".page");
+        jumpSlider.max = totalPages;
+        preloadNextImages(0);
       }
 
       function showToast(message) {
@@ -240,7 +455,7 @@
 
       function updatePageInfo() {
         const displayIndex = Math.min(currentIndex + 1, totalPages);
-        pageInfo.textContent = `${displayIndex} / ${totalPages}`;
+        btnJump.textContent = `${displayIndex} / ${totalPages}`;
       }
 
       function flipNext() {
@@ -248,6 +463,7 @@
           pages[currentIndex].classList.add("flipped");
           currentIndex++;
           updatePageInfo();
+          preloadNextImages(currentIndex);
 
           if (currentIndex === totalPages) {
             showToast("Ini adalah halaman terakhir");
@@ -262,17 +478,51 @@
           currentIndex--;
           pages[currentIndex].classList.remove("flipped");
           updatePageInfo();
+          preloadNextImages(currentIndex);
         } else {
           showToast("Ini adalah halaman awal");
         }
       }
 
+      // Jump To Page Logic
+      btnJump.addEventListener("click", () => {
+        const currentDisplay = Math.min(currentIndex + 1, totalPages);
+        jumpSlider.value = currentDisplay;
+        modalPageDisplay.textContent = currentDisplay;
+        modalJump.classList.add("show");
+      });
+
+      jumpSlider.addEventListener("input", (e) => {
+        modalPageDisplay.textContent = e.target.value;
+      });
+
+      btnModalCancel.addEventListener("click", () => {
+        modalJump.classList.remove("show");
+      });
+
+      btnModalConfirm.addEventListener("click", () => {
+        const targetPage = parseInt(jumpSlider.value) - 1;
+        modalJump.classList.remove("show");
+
+        pages.forEach((page, idx) => {
+          if (idx < targetPage) {
+            page.classList.add("flipped");
+          } else {
+            page.classList.remove("flipped");
+          }
+        });
+
+        currentIndex = targetPage;
+        updatePageInfo();
+        preloadNextImages(currentIndex);
+      });
+
       btnNext.addEventListener("click", flipNext);
       btnPrev.addEventListener("click", flipPrev);
 
+      // Touch & Mouse Swipe Handlers
       let startX = 0;
       let endX = 0;
-      const container = document.querySelector(".container");
 
       container.addEventListener("touchstart", (e) => {
         startX = e.touches[0].clientX;
